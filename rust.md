@@ -63,6 +63,7 @@ fn main() {
 * `String` 是可增长的、可变的、有所有权的、UTF-8 编码的字符串类型
 
 字符串 slice 是 `String` 中一部分值的引用
+
 ``` rust
     let s = String::from("hello world");
     let hello = &s[0..5];
