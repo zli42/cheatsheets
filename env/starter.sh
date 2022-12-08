@@ -22,9 +22,9 @@ start(){
     cat > ssconfig.json << EOF
 {
     "server": "::",
-    "server_port": 8388,
+    "server_port": 4288,
     "password": "$password",
-    "method": "aes-256-gcm"
+    "method": "chacha20-ietf-poly1305"
 }
 EOF
 
