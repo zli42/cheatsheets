@@ -10,18 +10,23 @@ init(){
 }
 
 start(){
+    ip=`curl -s ifconfig.io`
+    echo "ip: $ip"
+
     password=`uuidgen -r | head -c 8`
-    echo $password
+    echo "password: $password"
+    echo
 
     cat > ssconfig.json << EOF
-    {
-        "server": "::",
-        "server_port": 8388,
-        "password": "$password",
-        "method": "aes-256-gcm"
-    }
-    EOF
+{
+    "server": "::",
+    "server_port": 8388,
+    "password": "$password",
+    "method": "aes-256-gcm"
+}
+EOF
 
+    echo "start server"
     ssserver -c ssconfig.json
 }
 
