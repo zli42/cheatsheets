@@ -1,12 +1,10 @@
-#!/bin/bash
-
 init(){
     apt update
     apt upgrade -y
     apt autoremove -y
 
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "$HOME/.cargo/env"
+    . "$HOME/.cargo/env"
 
     cargo install shadowsocks-rust
 }
