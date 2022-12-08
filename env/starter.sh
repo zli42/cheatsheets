@@ -1,31 +1,40 @@
 init(){
+    echo "[update system]"
     apt update
     apt upgrade -y
     apt autoremove -y
 
+    echo
+    echo "[install rust]"
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    . "$HOME/.cargo/env"
+    source "$HOME/.cargo/env"
 
+    echo
+    echo "[install shadowsocks]"
     cargo install shadowsocks-rust
 }
 
 start(){
     ip=`curl -s ifconfig.io`
-    echo "ip: $ip"
+    port=4288
+    password=`uuidgen -r | base64 | head -c 8`
+    method="chacha20-ietf-poly1305"
 
-    password=`uuidgen -r | head -c 8`
-    echo "password: $password"
-    echo
+    printf "%-10s %s\n" "ip" $ip
+    printf "%-10s %s\n" "port" $port
+    printf "%-10s %s\n" "password" $password
+    printf "%-10s %s\n" "method" $method
 
     cat > ssconfig.json << EOF
 {
     "server": "::",
-    "server_port": 4288,
+    "server_port": $port,
     "password": "$password",
-    "method": "chacha20-ietf-poly1305"
+    "method": "$method"
 }
 EOF
 
+    echo
     echo "start server"
     ssserver -c ssconfig.json
 }
