@@ -1,3 +1,5 @@
+#!/bin/bash
+
 init(){
     apt update
     apt upgrade -y
