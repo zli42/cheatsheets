@@ -60,6 +60,10 @@ $$score(user, item) = \sum_i(sim(user, user_i) \times like(user_i, item))$$
 
 既要全量训练，又要增量训练。小时级数据有偏，random shuffle 后的全量训练优于增量训练，增量能捕捉用户兴趣变化。
 
+由于推荐的长尾效应，双塔对热门 item 的表征较好，对冷门 item 表征较差。
+
+对冷门物品的表征，需要用到内容理解（cv/nlp）。
+
 ### Geo Hash
 
 地理位置附近的优质 item
@@ -90,6 +94,7 @@ $$score(user, item) = \sum_i(sim(user, user_i) \times like(user_i, item))$$
 * 热门
 * 地理位置
 * 类别/tag
+* 基于内容 cv/nlp
 * 关注作者
 * itemCF / userCF
 * u2i
@@ -162,7 +167,11 @@ $$score(user, item) = \sum_i(sim(user, user_i) \times like(user_i, item))$$
 
 ### SENet
 
+filed 间加权
+
 ![senet](./src/senet.png)
+
+### Bilinear Cross
 
 ### FiBiNet
 
@@ -177,6 +186,15 @@ DNN 提供告诫特征抽取
 ### DIN
 
 ![din](./src/din.png)
+
+用加权平均代替简单平均，即注意力机制。权重是候选物品与用户 lastN 物品的相似度。
+
+优化：SIM
+
+* 长序列（长期兴趣）优于短序列（近期兴趣）
+* 注意力机制优于简单平均
+* 使用与候选 item 相同类目过滤，优化计算相似度
+* 使用时间信息有助于提升效果
 
 ## 指标
 
@@ -219,7 +237,16 @@ $ LogLoss = - \frac{1}{N} \sum_{i=1}^{N} (y_i \log{P_i} + (1 - y_i) \log{(1 - P_
 
 ## 重排
 
-冷启动 探索利用
+### MMR 多样性
+
+## 冷启动
+
+![lengqidong](./src/lengqidong.png)
+
+* 使用图片/标题内容相似的高曝光 item embedding 平均
+* 类目/关键词时间倒排
+* look-alike，对新 item 有过交互的 user embedding 平均，推荐给与该平均向量相似的用户
+
 
 Wide&Deep为什么用了两个优化器分别优化Wide侧和Deep侧？
 Wide侧的优化器使用带L1正则化项的FTRL，Deep侧的优化器是AdaGrad。采用 L1 FTRL是想让Wide部分变得更加稀疏，而Deep部分的稀疏向量已经embedding化，所以不用考虑特征稀疏问题。
@@ -229,5 +256,3 @@ Wide侧的优化器使用带L1正则化项的FTRL，Deep侧的优化器是AdaGra
 
 3 DNN中加入position bias为什么不能和其他特征一样喂入DNN底层，而必须通过一个浅层网络接入？
 我们希望DNN专注于学习user对不同item的偏好，所以bias要交给单独的网络去学，在最后一层融合就好，还有user bias，item bias，都是一样的道理
-
-## 冷启动
