@@ -247,7 +247,6 @@ $ LogLoss = - \frac{1}{N} \sum_{i=1}^{N} (y_i \log{P_i} + (1 - y_i) \log{(1 - P_
 * 类目/关键词时间倒排
 * look-alike，对新 item 有过交互的 user embedding 平均，推荐给与该平均向量相似的用户
 
-
 Wide&Deep为什么用了两个优化器分别优化Wide侧和Deep侧？
 Wide侧的优化器使用带L1正则化项的FTRL，Deep侧的优化器是AdaGrad。采用 L1 FTRL是想让Wide部分变得更加稀疏，而Deep部分的稀疏向量已经embedding化，所以不用考虑特征稀疏问题。
 
